@@ -1,7 +1,14 @@
 from flask import Flask, request, jsonify
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv('.env')
 
 app = Flask(__name__)
+
+NOTION_KEY = os.environ.get("NOTION_KEY")
+NOTION_RESUME_DATABASE_ID = os.environ['NOTION_RESUME_DATABASE_ID']
 
 @app.route('/store_name', methods=['POST'])
 def store_name():
@@ -10,11 +17,11 @@ def store_name():
     except KeyError:
         return jsonify({'error': 'Invalid request. Please provide a "name" field in the request body.'}), 400
 
-    integration_token = 'secret_MgH4QBQvYCoQ9VfBx6yJvYZTOIId7u6HydYequhp1QP'
-    database_id = '5dd39b5a3dfd4242971fa05a55c9f908'
+    notion_key = NOTION_KEY
+    database_id = NOTION_RESUME_DATABASE_ID
     url = 'https://api.notion.com/v1/pages'
     headers = {
-        'Authorization': f'Bearer {integration_token}',
+        'Authorization': f'Bearer {notion_key}',
         'Content-Type': 'application/json',
         'Notion-Version': '2021-08-16'
     }
@@ -34,11 +41,11 @@ def store_name():
 
 @app.route('/response_database', methods=['GET'])
 def response_database():
-    integration_token = 'secret_MgH4QBQvYCoQ9VfBx6yJvYZTOIId7u6HydYequhp1QP'
-    database_id = '5dd39b5a3dfd4242971fa05a55c9f908'
+    notion_key = NOTION_KEY
+    database_id = NOTION_RESUME_DATABASE_ID
     url = f'https://api.notion.com/v1/databases/{database_id}'
     headers = {
-        'Authorization': f'Bearer {integration_token}',
+        'Authorization': f'Bearer {notion_key}',
         'Content-Type': 'application/json',
         'Notion-Version': '2021-08-16'
     }
